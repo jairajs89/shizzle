@@ -1,5 +1,5 @@
 (function() {
-	var _all = document.getElementsByTagName('*');
+	//~ var _all = document.getElementsByTagName('*');
 	
 	var $$ = Array;
 	
@@ -58,19 +58,15 @@
 			this.concat2(arr);
 			return;
 		}
-		var i=0,j=0;
-		var li=this.length,lj=arr.length;
-		var s;
-		while(i<li && j<lj) {
-			si = this[i].sourceIndex;
-			sj = arr[j].sourceIndex;
-			s = compare(this[i],arr[j]);
+		var j, lj;
+		for(var s, i=0, j=0, li=this.length, lj=arr.length; i<li && j<lj;) {
+			s = compare(this[i], arr[j]);
 			if(s<0) {
 				++i;
 			} else if(s==0) {
 				++i, ++j;
 			} else {
-				this.splice(i,0,arr[j++]);
+				this.splice(i,0, arr[j++]);
 			}
 		}
 		if(j<lj) {
