@@ -515,14 +515,16 @@
 							}
 						}
 					} else if(check[j][2][0]=='=') {
+						var checker = new RegExp('^'+check[j][1]+'$');
 						for(var k=0,lk=found.length; k<lk; ++k) {
-							if(found[k].getAttribute(check[j][0])==check[j][1]) {
+							if(checker.test(found[k].getAttribute(check[j][0]))) {
 								elems.push(found[k]);
 							}
 						}
 					} else if(check[j][2][0]=='!') {
+						var checker = new RegExp('^'+check[j][1]+'$');
 						for(var k=0,lk=found.length; k<lk; ++k) {
-							if(found[k].getAttribute(check[j][0])!=check[j][1]) {
+							if(!checker.test(found[k].getAttribute(check[j][0]))) {
 								elems.push(found[k]);
 							}
 						}
