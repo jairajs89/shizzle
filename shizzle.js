@@ -500,72 +500,45 @@
 						return found;
 					}
 				}
+				var checker = [];
 				for(var op, j=0, lj=check.length; j<lj; ++j) {
-					//todo: optimise duplicated code
 					check[j] = check[j].match(r.word).concat(op=check[j].match(r.attrEq));
 					if(op && check[j].length<3) {
 						check[j][2] = check[j][1];
 						check[j][1] = '';
 					}
-					elems = new $$();
-					if(!op) {
-						for(var k=0,lk=found.length; k<lk; ++k) {
-							if(found[k].getAttribute(check[j][0])) {
-								elems.push(found[k]);
-							}
-						}
-					} else if(check[j][2][0]=='=') {
-						var checker = new RegExp('^'+check[j][1]+'$');
-						for(var k=0,lk=found.length; k<lk; ++k) {
-							if(checker.test(found[k].getAttribute(check[j][0]))) {
-								elems.push(found[k]);
-							}
-						}
-					} else if(check[j][2][0]=='!') {
-						var checker = new RegExp('^'+check[j][1]+'$');
-						for(var k=0,lk=found.length; k<lk; ++k) {
-							if(!checker.test(found[k].getAttribute(check[j][0]))) {
-								elems.push(found[k]);
-							}
-						}
-					} else if(check[j][2][0]=='*') {
-						var checker = new RegExp(check[j][1]);
-						for(var k=0,lk=found.length; k<lk; ++k) {
-							if(checker.test(found[k].getAttribute(check[j][0]))) {
-								elems.push(found[k]);
-							}
-						}
-					} else if(check[j][2][0]=='~') {
-						var checker = new RegExp('(^|\b)'+check[j][1]+'($|\b)');
-						for(var k=0,lk=found.length; k<lk; ++k) {
-							if(checker.test(found[k].getAttribute(check[j][0]))) {
-								elems.push(found[k]);
-							}
-						}
-					} else if(check[j][2][0]=='^') {
-						var checker = new RegExp('^'+check[j][1]);
-						for(var k=0,lk=found.length; k<lk; ++k) {
-							if(checker.test(found[k].getAttribute(check[j][0]))) {
-								elems.push(found[k]);
-							}
-						}
-					} else if(check[j][2][0]=='$') {
-						var checker = new RegExp(check[j][1]+'$');
-						for(var k=0,lk=found.length; k<lk; ++k) {
-							if(checker.test(found[k].getAttribute(check[j][0]))) {
-								elems.push(found[k]);
-							}
-						}
-					} else if(check[j][2][0]=='|') {
-						var checker = new RegExp('^'+check[j][1]+'(-)?$');
-						for(var k=0,lk=found.length; k<lk; ++k) {
-							if(checker.test(found[k].getAttribute(check[j][0]))) {
-								elems.push(found[k]);
-							}
+					var tmpChecker = [check[j][0]];
+					if(op) {
+						if(check[j][2][0]=='=') {
+							tmpChecker.push(new RegExp('^'+check[j][1]+'$'));
+						} else if(check[j][2][0]=='!') {
+							tmpChecker.push(new RegExp('^'+check[j][1]+'$'), 0);
+						} else if(check[j][2][0]=='*') {
+							tmpChecker.push(new RegExp(check[j][1]));
+						} else if(check[j][2][0]=='~') {
+							tmpChecker.push(new RegExp('(^|\b)'+check[j][1]+'($|\b)'));
+						} else if(check[j][2][0]=='^') {
+							tmpChecker.push(new RegExp('^'+check[j][1]));
+						} else if(check[j][2][0]=='$') {
+							tmpChecker.push(new RegExp(check[j][1]+'$'));
+						} else if(check[j][2][0]=='|') {
+							tmpChecker.push(new RegExp('^'+check[j][1]+'(-)?$'));
 						}
 					}
-					found = elems;
+					checker.push(tmpChecker);
 				}
+				elems = new $$();
+				attrloop:for(var j=0, lj=found.length; j<lj; ++j) {
+					for(var k=checker.length; k--;) {
+						if((checker[k].length==1 && !found[j].getAttribute(checker[k][0])) ||
+								(checker[k].length==2 && !checker[k][1].test(found[j].getAttribute(checker[k][0]))) ||
+								(checker[k].length==3 && checker[k][1].test(found[j].getAttribute(checker[k][0])))) {
+							continue attrloop;
+						}
+					}
+					elems.push(found[j]);
+				}
+				found = elems;
 				
 				if(!found.length) {
 					return found;
