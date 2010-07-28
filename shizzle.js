@@ -115,7 +115,8 @@
 			return elem.firstElementChild;
 		}:
 		function(elem) {
-			for(elem=elem.firstChild; elem.nodeType!=1 && (elem=elem.nextSibling);) {}
+			for(elem=elem.firstChild; elem.nodeType!=1 &&
+										(elem=elem.nextSibling);) {}
 			return elem;
 		};
 	var lastChild = ('lastElementChild' in tester)?
@@ -123,7 +124,8 @@
 			return elem.lastElementChild;
 		}:
 		function(elem) {
-			for(elem=elem.lastChild; elem.nodeType!=1 && (elem=elem.previousSibling);) {}
+			for(elem=elem.lastChild; elem.nodeType!=1 &&
+										(elem=elem.previousSibling);) {}
 			return elem;
 		};
 	var childCount = ('childElementCount' in tester)?
@@ -146,7 +148,8 @@
 		function(e,c) {
 			var arr = new $$();
 			var matcher = new RegExp('(\\s|^)'+c+'(\\s|$)');
-			for(var elems=e.getElementsByTagName('*'),i=0,l=elems.length; i<l; ++i) {
+			for(var elems=e.getElementsByTagName('*'), i=0, l=elems.length;
+																	i<l; ++i) {
 				if(matcher.test(elems[i].className)) {
 					arr.push(elems[i]);
 				}
@@ -166,7 +169,8 @@
 		//todo: noncompliance in certain browsers
 		$ = function(selector) {
 			var elems = new $$();
-			for(var nl=document.querySelectorAll(selector), i=nl.length; i--; elems.unshift(nl[i])) {}
+			for(var nl=document.querySelectorAll(selector), i=nl.length;
+												i--; elems.unshift(nl[i])) {}
 			return elems;
 		};
 	} else {
@@ -213,7 +217,8 @@
 			var elems = uniqueAscenstors(parents);
 			var found = new $$();
 			for(var j=0, lj=elems.length; j<lj;) {
-				for(var tags=fn(elems[j++], matcher), k=0, lk=tags.length; k<lk; ++k) {
+				for(var tags=fn(elems[j++], matcher), k=0, lk=tags.length;
+																	k<lk; ++k) {
 					found.push(tags[k]);
 				}
 			}
@@ -307,7 +312,8 @@
 				context = $(context);
 			}
 			//Select by commas
-			for(var parts=selector.split(r.comma), i=0, l=parts.length; i<l; ++i) {
+			for(var parts=selector.split(r.comma), i=0, l=parts.length;
+																	i<l; ++i) {
 				elems.merge(select(parts[i], context));
 			}
 			
@@ -322,7 +328,8 @@
 			}
 			
 			//Separate by whitespace
-			for(var i=0, parts=selector.split(r.white), l=parts.length; i<l; ++i) {
+			for(var i=0, parts=selector.split(r.white), l=parts.length;
+																	i<l; ++i) {
 				if(!parts[i]) {
 					continue;
 				}
@@ -332,9 +339,10 @@
 				var foundTest = null;
 				//Get last sequence separator
 				while((found=Math.max(parts[i].lastIndexOf('>',found-1),
-										parts[i].lastIndexOf('+',found-1),
-										parts[i].lastIndexOf('~',found-1)))!=-1 &&
-							parts[i].length>found+1 && r.digeq.test(parts[i][found+1])) {}
+									parts[i].lastIndexOf('+',found-1),
+									parts[i].lastIndexOf('~',found-1)))!=-1 &&
+									parts[i].length>found+1 &&
+									r.digeq.test(parts[i][found+1])) {}
 				if(found!=-1) {
 					elems = new $$();
 					if(found) {
@@ -381,7 +389,9 @@
 					}
 				}
 				
-				if(!(parents=select2(parts[i].substr(found+1),parents,elems)).length) {
+				if(!(parents=select2(parts[i].substr(found+1),
+									parents,
+									elems)).length) {
 					return parents;
 				}
 			}
@@ -406,7 +416,8 @@
 			}
 			
 			//Select by id
-			if((check=selector.match(r.id)) && !inNot(selector,selector.search(r.id))) {
+			if((check=selector.match(r.id)) &&
+									!inNot(selector,selector.search(r.id))) {
 				check = check[0].substr(1);
 				if(!found.length) {
 					if(check=document.getElementById(check)) {
@@ -450,12 +461,15 @@
 					if(!inNot(selector,index)) {
 						var checker = check[k].substr(1);
 						if(!found.length) {
-							if(!(found=getter(parents, getByClass, checker)).length) {
+							if(!(found=getter(parents,
+												getByClass,
+												checker)).length) {
 								return found;
 							}
 						} else {
 							elems = new $$();
-							checker = new RegExp('(^|\\s)'+checker+'(\\s|$)','i');
+							checker = new RegExp('(^|\\s)'+checker+'(\\s|$)',
+																		'i');
 							for(var j=0,lj=found.length; j<lj; ++j) {
 								if(checker.test(found[j].className)) {
 									elems.push(found[j]);
@@ -502,7 +516,8 @@
 				}
 				var checker = [];
 				for(var op, j=0, lj=check.length; j<lj; ++j) {
-					check[j] = check[j].match(r.word).concat(op=check[j].match(r.attrEq));
+					check[j] = check[j].match(r.word)
+										.concat(op=check[j].match(r.attrEq));
 					if(op && check[j].length<3) {
 						check[j][2] = check[j][1];
 						check[j][1] = '';
@@ -510,19 +525,26 @@
 					var tmpChecker = [check[j][0]];
 					if(op) {
 						if(check[j][2][0]=='=') {
-							tmpChecker.push(new RegExp('^'+check[j][1]+'$'));
+							tmpChecker.push(
+									new RegExp('^'+check[j][1]+'$'));
 						} else if(check[j][2][0]=='!') {
-							tmpChecker.push(new RegExp('^'+check[j][1]+'$'), 0);
+							tmpChecker.push(
+									new RegExp('^'+check[j][1]+'$'), 0);
 						} else if(check[j][2][0]=='*') {
-							tmpChecker.push(new RegExp(check[j][1]));
+							tmpChecker.push(
+									new RegExp(check[j][1]));
 						} else if(check[j][2][0]=='~') {
-							tmpChecker.push(new RegExp('(^|\b)'+check[j][1]+'($|\b)'));
+							tmpChecker.push(
+									new RegExp('(^|\b)'+check[j][1]+'($|\b)'));
 						} else if(check[j][2][0]=='^') {
-							tmpChecker.push(new RegExp('^'+check[j][1]));
+							tmpChecker.push(
+									new RegExp('^'+check[j][1]));
 						} else if(check[j][2][0]=='$') {
-							tmpChecker.push(new RegExp(check[j][1]+'$'));
+							tmpChecker.push(
+									new RegExp(check[j][1]+'$'));
 						} else if(check[j][2][0]=='|') {
-							tmpChecker.push(new RegExp('^'+check[j][1]+'(-)?$'));
+							tmpChecker.push(
+									new RegExp('^'+check[j][1]+'(-)?$'));
 						}
 					}
 					checker.push(tmpChecker);
@@ -530,9 +552,14 @@
 				elems = new $$();
 				attrloop:for(var j=0, lj=found.length; j<lj; ++j) {
 					for(var k=checker.length; k--;) {
-						if((checker[k].length==1 && !found[j].getAttribute(checker[k][0])) ||
-								(checker[k].length==2 && !checker[k][1].test(found[j].getAttribute(checker[k][0]))) ||
-								(checker[k].length==3 && checker[k][1].test(found[j].getAttribute(checker[k][0])))) {
+						if((checker[k].length==1 &&
+								!found[j].getAttribute(checker[k][0])) ||
+								(checker[k].length==2 &&
+									!checker[k][1].test(found[j]
+											.getAttribute(checker[k][0]))) ||
+								(checker[k].length==3 &&
+									checker[k][1].test(found[j]
+											.getAttribute(checker[k][0])))) {
 							continue attrloop;
 						}
 					}
@@ -555,15 +582,20 @@
 				for(var checks=check, q=0, lq=checks.length; q<lq; ++q) {
 					check = checks[q];
 					var pseudo = check.indexOf('(');
-					var val = (pseudo!=-1)?check.substring(pseudo+1,check.length-1):'';
+					var val = (pseudo!=-1)?
+								check.substring(pseudo+1,check.length-1):
+								'';
 					if(val[0]=="'" || val[0]=='"') {
 						val = val.substr(1,val.length-2);
 					}
-					pseudo = check.substr(1,((pseudo==-1)?check.length:pseudo)-1);
+					pseudo = check.substr(1,((pseudo==-1)?
+												check.length:
+												pseudo)-1);
 					var elems = new $$();
 					if(pseudo=='button') {
 						for(var j=0,lj=found.length; j<lj; ++j) {
-							if(found[j].tagName=='BUTTON' || found[j].type=='button') {
+							if(found[j].tagName=='BUTTON' ||
+													found[j].type=='button') {
 								elems.push(found[j]);
 							}
 						}
@@ -581,7 +613,9 @@
 						}
 					} else if(pseudo=='contains') {
 						for(var j=0,lj=found.length; j<lj; ++j) {
-							if((found[j].textContent||found[j].innerText||found[j].innerHTML).indexOf(val)!=-1) {
+							if((found[j].textContent ||
+									found[j].innerText ||
+									found[j].innerHTML).indexOf(val)!=-1) {
 								elems.push(found[j]);
 							}
 						}
@@ -609,7 +643,8 @@
 						} else {
 							return new $$();
 						}
-					} else if(pseudo=='even' || (pseudo=='nth-child' && val=='even')) {
+					} else if(pseudo=='even' ||
+										(pseudo=='nth-child' && val=='even')) {
 						elems = nth('2n',found);
 					} else if(pseudo=='file') {
 						for(var j=0,lj=found.length; j<lj; ++j) {
@@ -647,9 +682,10 @@
 							fChild = found[j];
 							do {
 								eStyle = getComputedStyle(fChild,null);
-								if((eStyle.height=='0px' && eStyle.width=='0px') ||
-										fChild.type=='hidden' ||
-														eStyle.display=='none') {
+								if((eStyle.height=='0px' &&
+											eStyle.width=='0px') ||
+											fChild.type=='hidden' ||
+											eStyle.display=='none') {
 									elems.push(found[j]);
 									break;
 								}
@@ -663,8 +699,10 @@
 						}
 					} else if(pseudo=='input') {
 						for(var j=0,lj=found.length; j<lj; ++j) {
-							if(found[j].tagName=='INPUT' || found[j].tagName=='TEXTAREA' ||
-									found[j].tagName=='SELECT' || found[j].tagName=='BUTTON') {
+							if(found[j].tagName=='INPUT' ||
+										found[j].tagName=='TEXTAREA' ||
+										found[j].tagName=='SELECT' ||
+										found[j].tagName=='BUTTON') {
 								elems.push(found[j]);
 							}
 						}
@@ -694,7 +732,8 @@
 								elems.push(found[j]);
 							}
 						}
-					} else if(pseudo=='odd' || (pseudo=='nth-child' && val=='odd')) {
+					} else if(pseudo=='odd' ||
+										(pseudo=='nth-child' && val=='odd')) {
 						elems = nth('2n+1', found);
 					} else if(pseudo=='nth-child') {
 						elems = nth(val, found);
@@ -705,7 +744,8 @@
 								continue;
 							}
 							cache = found[j].parentNode;
-							if(found[j]==firstChild(cache) && found[j]==lastChild(cache)) {
+							if(found[j]==firstChild(cache) &&
+												found[j]==lastChild(cache)) {
 								elems.push(found[j]);
 							}
 						}
@@ -757,8 +797,10 @@
 							fChild = found[j];
 							do {
 								eStyle = getComputedStyle(fChild,null);
-								if((eStyle.height=='0px' && eStyle.width=='0px') ||
-										fChild.type=='hidden' || eStyle.display=='none') {
+								if((eStyle.height=='0px' &&
+											eStyle.width=='0px') ||
+											fChild.type=='hidden' ||
+											eStyle.display=='none') {
 									break;
 								}
 							} while(fChild=fChild.parentNode);
